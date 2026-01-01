@@ -28,6 +28,8 @@ No terminal required. Works with the Claude app you already have.
 3. Open Claude Desktop → Click the attachment icon → "Add folder to Project" → Select the `second-brain` folder
 4. Copy prompts from `skills/` folder when you need them (see Daily Workflow below)
 
+![Claude Desktop Setup](images/claude-desktop.png)
+
 ---
 
 ### Option B: Claude Code (Technical)
@@ -69,6 +71,9 @@ Claude finds "collisions" between your captured knowledge and problems you're wo
 
 ### `/patterns` - Reveal Blind Spots
 Zoom out on your thinking. What topics keep appearing in your captures? What contradictions exist? What are you consistently ignoring? Run this monthly and you'll see your intellectual landscape in a way you never could manually.
+
+![Example Digest Output](images/digest-output-2.png)
+*Example: A digested article becomes a searchable, structured note*
 
 ---
 
@@ -115,6 +120,9 @@ Generates:
 - Key insights to keep
 - Unfinished loops
 - Suggested next actions
+
+![Example Review Output](images/review.png)
+*Example: Weekly review surfaces themes and suggests next actions*
 
 ---
 
