@@ -8,22 +8,11 @@ This system fixes that. Four Claude Code skills that turn your reading into sear
 
 The capture part is useful. But the real unlock is `/review`, `/ideas`, and `/patterns` - that's where your knowledge actually starts compounding.
 
-I've been really excited about the outcome. You can easily set this up too.
-
 **Setup:** 15 minutes
+
 **Daily use:** 5 minutes
+
 **Result:** Knowledge that compounds instead of decays
-
----
-
-## Get the Template
-
-**Option 1: Dropbox** (easiest)
-Download the `second-brain` folder and copy it to your Documents.
-
-**Option 2: Manual**
-1. Create folders: `00-inbox/`, `01-todos/`, `02-projects/`, `03-resources/`, `05-reviews/`
-2. Copy the skills to `~/.claude/skills/`
 
 ---
 
@@ -39,20 +28,32 @@ Download the `second-brain` folder and copy it to your Documents.
 
 ## Setup
 
+**1. Get the files:**
+
+*Option A: Download ZIP (non-technical)*
+- Click the green "Code" button above, then "Download ZIP"
+- Unzip to `~/Documents/second-brain`
+
+*Option B: Clone with git*
 ```bash
-# 1. Copy the template to your Documents
-cp -r ~/Downloads/second-brain ~/Documents/second-brain
+git clone https://github.com/naushadzaman/second-brain.git ~/Documents/second-brain
 cd ~/Documents/second-brain
-
-# 2. Install the skills
-mkdir -p ~/.claude/skills
-cp -r skills/* ~/.claude/skills/
-
-# 3. Restart Claude Code to load skills
-
-# 4. Open in Obsidian (optional)
-# Open Obsidian → Open folder as vault → Select ~/Documents/second-brain
 ```
+
+**2. Let Claude set it up for you:**
+```bash
+claude "Read this README and set up my second brain. Install the skills and configure everything."
+```
+
+Claude will:
+- Copy skills to `~/.claude/skills/`
+- Walk you through any additional setup
+- Explain how to use it
+
+**3. Restart Claude Code** to load the skills.
+
+**4. Open in Obsidian** (optional):
+Open Obsidian → Open folder as vault → Select `~/Documents/second-brain`
 
 ---
 
@@ -139,7 +140,7 @@ second-brain/
 ## Common Questions
 
 **Do I need to be technical?**
-No. If you can copy-paste into a terminal, you're set.
+No. Download the zip, run Claude, done.
 
 **What if I miss a day?**
 No problem. The system works when you use it.
@@ -180,6 +181,12 @@ This watches `00-inbox/` for new files and processes them automatically. Totally
 ls ~/.claude/skills/
 # Restart Claude Code after installing skills
 ```
+
+---
+
+## Related
+
+- [Full Knowledge Vault README](https://gist.github.com/naushadzaman/164e85ec3557dc70392249e548b423e9) — More comprehensive system with project context, meetings, and automation
 
 ---
 

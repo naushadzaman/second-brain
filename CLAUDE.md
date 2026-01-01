@@ -45,7 +45,6 @@ second-brain/
 
 **No MCP Required:**
 - Skills use WebFetch and WebSearch (built-in Claude tools)
-- No social-hydrator or Apify configuration needed
 - Some social media content may have limited extraction
 
 **Automation:**
