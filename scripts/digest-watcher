@@ -1,0 +1,67 @@
+#!/bin/bash
+# digest-watcher - Poll inbox and process files automatically
+# Part of Second Brain in a Box - Executive Edition
+
+# Configuration - UPDATE THESE PATHS
+VAULT="${SECOND_BRAIN_PATH:-$HOME/Documents/second-brain}"
+INBOX="$VAULT/00-inbox"
+LOGFILE="$HOME/.local/share/second-brain/digest.log"
+PIDFILE="$HOME/.local/share/second-brain/watcher.pid"
+POLL_INTERVAL=300  # Check every 5 minutes
+
+mkdir -p "$(dirname "$LOGFILE")"
+
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] WATCHER: $*" >> "$LOGFILE"
+}
+
+# Check if already running
+if [[ -f "$PIDFILE" ]]; then
+  OLDPID=$(cat "$PIDFILE")
+  if kill -0 "$OLDPID" 2>/dev/null; then
+    echo "Watcher already running (PID $OLDPID)"
+    exit 0
+  fi
+fi
+
+# Save PID
+echo $$ > "$PIDFILE"
+trap "rm -f $PIDFILE" EXIT
+
+log "Starting inbox watcher on $INBOX"
+
+# Get the directory where this script lives
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+process_inbox() {
+  local processed=0
+
+  for file in "$INBOX"/*.md; do
+    [[ -f "$file" ]] || continue
+    local basename=$(basename "$file" .md)
+
+    # Skip CLAUDE.md
+    [[ "$basename" == "CLAUDE" ]] && continue
+
+    log "Found: $file"
+    "$SCRIPT_DIR/digest-inbox" "$file"
+    processed=$((processed + 1))
+
+    # Small delay between files to avoid rate limits
+    sleep 10
+  done
+
+  echo $processed
+}
+
+# Main loop: poll until inbox is empty, then wait
+while true; do
+  count=$(process_inbox)
+
+  if [[ "$count" -eq 0 || -z "$count" ]]; then
+    log "Inbox empty. Sleeping for $POLL_INTERVAL seconds..."
+    sleep $POLL_INTERVAL
+  else
+    log "Processed $count file(s). Checking for more..."
+  fi
+done

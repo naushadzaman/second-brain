@@ -1,0 +1,85 @@
+#!/bin/bash
+# digest-inbox - Process a single inbox file
+# Part of Second Brain in a Box - Executive Edition
+
+set -euo pipefail
+
+# Configuration - UPDATE THESE PATHS
+VAULT="${SECOND_BRAIN_PATH:-$HOME/Documents/second-brain}"
+INBOX="$VAULT/00-inbox"
+RESOURCES="$VAULT/03-resources"
+LOGFILE="$HOME/.local/share/second-brain/digest.log"
+
+mkdir -p "$(dirname "$LOGFILE")"
+
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOGFILE"
+}
+
+# Get filename argument
+FILE="$1"
+BASENAME=$(basename "$FILE" .md)
+
+# Skip CLAUDE.md
+if [[ "$BASENAME" == "CLAUDE" ]]; then
+  exit 0
+fi
+
+# Check file exists
+if [[ ! -f "$FILE" ]]; then
+  log "File not found: $FILE"
+  exit 0
+fi
+
+log "Processing: $BASENAME"
+
+# Read file content
+CONTENT=$(cat "$FILE")
+
+# Create the prompt with inline digest instructions
+# NOTE: This does NOT use MCP tools - only WebFetch and WebSearch
+PROMPT="You are processing an inbox item for a knowledge vault.
+
+INBOX FILE: $BASENAME.md
+CONTENT:
+$CONTENT
+
+TASK: Transform this into a comprehensive resource note.
+
+EXTRACTION RULES:
+- Use WebFetch to get content from URLs
+- Use WebSearch if WebFetch returns limited content
+- Do NOT use any MCP tools (they are not configured)
+- Extract as much detail as possible: quotes, data, frameworks, names
+
+CREATE RESOURCE WITH:
+1. YAML frontmatter:
+   - tags (topic tags + source/article or source/video + to-process)
+   - created: $(date +%Y-%m-%d)
+   - source: [the URL]
+   - source_type: article | video | tweet | book | idea
+   - keywords: [searchable terms for future retrieval]
+
+2. Sections:
+   - # Title (descriptive, not the filename)
+   - ## TL;DR (key insight in bold, one sentence)
+   - ## The Problem / Context (why this matters)
+   - ## Key Points (organized by subtopic)
+   - ## Actionable Takeaways (checkboxes for actions)
+   - ## Related (potential wiki links)
+   - <details> Full Content (raw text preserved)
+
+3. Save to: $RESOURCES/[Generated-Title].md
+4. Delete the original: $FILE
+
+Use the Write tool to create the resource, then Bash to delete the inbox file."
+
+# Run Claude with the full prompt
+cd "$VAULT"
+claude "$PROMPT" -p \
+  --permission-mode acceptEdits \
+  --no-session-persistence \
+  --output-format text \
+  >> "$LOGFILE" 2>&1
+
+log "Completed: $BASENAME"
