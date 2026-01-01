@@ -1,59 +1,58 @@
 # Second Brain in a Box
 
-> AI-powered knowledge system using Claude Code skills.
+> AI-powered knowledge system that makes what you read compound.
 
 I built this to actually remember what I read. Most of us consume tons of content, bookmark it, and never go back. Or we go back, skim it, and forget it in 48 hours. Knowledge accumulates but never compounds.
 
-This system fixes that. Four Claude Code skills that turn your reading into searchable notes, synthesize what you've learned weekly, surface connections between ideas you'd never make yourself, and reveal patterns in your thinking you can't see manually.
+This system fixes that. Four commands that turn your reading into searchable notes, synthesize what you've learned weekly, surface connections between ideas you'd never make yourself, and reveal patterns in your thinking you can't see manually.
 
 The capture part is useful. But the real unlock is `/review`, `/ideas`, and `/patterns` - that's where your knowledge actually starts compounding.
 
-**Setup:** 15 minutes
-
-**Daily use:** 5 minutes
-
-**Result:** Knowledge that compounds instead of decays
+**Setup:** 15 minutes | **Daily use:** 5 minutes | **Result:** Knowledge that compounds
 
 ---
 
-## Prerequisites
+## Choose Your Path
 
-1. **Claude Code** — Install from [Anthropic](https://docs.anthropic.com/en/docs/claude-code)
-   - Requires Claude Pro or Max subscription (~$20-100/month)
+### Option A: Claude Desktop (Non-Technical)
 
-2. **Obsidian** (optional) — Download from [obsidian.md](https://obsidian.md)
-   - Free, works everywhere
+No terminal required. Works with the Claude app you already have.
+
+**Prerequisites:**
+- [Claude Desktop](https://claude.ai/download) with Pro subscription (~$20/month)
+- [Obsidian](https://obsidian.md) (optional, free)
+
+**Setup:**
+1. Click the green "Code" button above → "Download ZIP"
+2. Unzip to your Documents folder (e.g., `Documents/second-brain`)
+3. Open Claude Desktop → Click the attachment icon → "Add folder to Project" → Select the `second-brain` folder
+4. Copy prompts from `skills/` folder when you need them (see Daily Workflow below)
 
 ---
 
-## Setup
+### Option B: Claude Code (Technical)
 
-**1. Get the files:**
+Full power with slash commands. Requires terminal comfort.
 
-*Option A: Download ZIP (non-technical)*
-- Click the green "Code" button above, then "Download ZIP"
-- Unzip to `~/Documents/second-brain`
+**Prerequisites:**
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) with Pro or Max subscription
+- [Obsidian](https://obsidian.md) (optional, free)
 
-*Option B: Clone with git*
+**Setup:**
+1. Clone or download:
 ```bash
 git clone https://github.com/naushadzaman/second-brain.git ~/Documents/second-brain
 cd ~/Documents/second-brain
 ```
 
-**2. Let Claude set it up for you:**
+2. Let Claude set it up:
 ```bash
 claude "Read this README and set up my second brain. Install the skills and configure everything."
 ```
 
-Claude will:
-- Copy skills to `~/.claude/skills/`
-- Walk you through any additional setup
-- Explain how to use it
+3. Restart Claude Code to load skills.
 
-**3. Restart Claude Code** to load the skills.
-
-**4. Open in Obsidian** (optional):
-Open Obsidian → Open folder as vault → Select `~/Documents/second-brain`
+4. Open in Obsidian (optional): Open folder as vault → Select `second-brain`
 
 ---
 
@@ -75,7 +74,14 @@ Zoom out on your thinking. What topics keep appearing in your captures? What con
 
 ## Daily Workflow
 
-The core loop is simple:
+### Claude Desktop Users
+
+1. Open Claude Desktop with your second-brain project attached
+2. Paste the prompt from `skills/digest/SKILL.md`
+3. Add your link: "Process this: https://example.com/article"
+4. Claude creates a note in `03-resources/`
+
+### Claude Code Users
 
 ```bash
 cd ~/Documents/second-brain
@@ -84,16 +90,13 @@ claude "/digest https://example.com/article"
 
 That's it. Claude fetches the content, extracts key insights, and creates a searchable note in `03-resources/`.
 
-**When AI can't easily retrieve content** (paywalled articles, some social media), add context:
+### When AI can't retrieve content
 
-```bash
-claude "/digest https://example.com/article
+For paywalled articles or some social media, add context yourself:
 
-From this article:
-- Decision fatigue is real, limit daily choices
-- Morning routines work because they eliminate decisions
-- Author suggests batching similar tasks"
-```
+> Process this: https://example.com/article
+>
+> Key points: Decision fatigue is real. Morning routines eliminate decisions. Batch similar tasks.
 
 The more context you provide, the richer the note.
 
@@ -103,9 +106,9 @@ The more context you provide, the richer the note.
 
 **Saturday or Sunday:**
 
-```bash
-claude "/review"
-```
+*Claude Desktop:* Paste the prompt from `skills/review/SKILL.md`
+
+*Claude Code:* `claude "/review"`
 
 Generates:
 - Themes from your week
@@ -140,7 +143,10 @@ second-brain/
 ## Common Questions
 
 **Do I need to be technical?**
-No. Download the zip, run Claude, done.
+No. Use Claude Desktop (Option A). Download the zip, attach the folder, paste prompts.
+
+**What's the difference between Claude Desktop and Claude Code?**
+Claude Desktop is the regular app with a chat interface. Claude Code is a terminal tool with more power. Both work. Pick what's comfortable.
 
 **What if I miss a day?**
 No problem. The system works when you use it.
@@ -150,7 +156,7 @@ Your files stay on your computer. Claude sends queries to Anthropic's API, but y
 
 ---
 
-## Advanced: Automatic Processing
+## Advanced: Automatic Processing (Claude Code Only)
 
 If you want to get fancy and you're comfortable with cron jobs, you can automate inbox processing. The scripts are in the `scripts/` folder:
 
@@ -176,7 +182,10 @@ This watches `00-inbox/` for new files and processes them automatically. Totally
 
 ## Troubleshooting
 
-**Skills not working?**
+**Claude Desktop: Claude doesn't see my files?**
+Make sure you attached the folder as a Project. Click the attachment icon → "Add folder to Project".
+
+**Claude Code: Skills not working?**
 ```bash
 ls ~/.claude/skills/
 # Restart Claude Code after installing skills
